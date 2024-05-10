@@ -1,6 +1,6 @@
-site_name: SITE NAME
-repo_url: https://github.com/acceleratescience/REPO-TITLE
-site_url: https://acceleratescience.github.io/REPO-TITLE/
+site_name: Docker for AI in Science
+repo_url: https://github.com/acceleratescience/docker-for-science
+site_url: https://acceleratescience.github.io/docker-for-science/
 nav:
   - Home: 
     - Welcome!: index.md
@@ -10,10 +10,10 @@ nav:
   - Multi Page 1:
     - Subpage 1: multi_1/subpage_1.md
     - Subpage 2: multi_1/subpage_2.md
-  - Multi Page 2:
-    - multi_2/index.md
-    - Page 1: multi_2/subpage_1.md
-    - Page 2: multi_2/subpage_2.md
+  - Introduction to Docker:
+    - intro/index.md
+    - Why Docker?: intro/why.md
+    - Docker Basics: intro/introdocker.md
   - Resources:
     - resources/index.md
     - Slides: resources/slides.md

@@ -2,11 +2,13 @@
     <img src="./imgs/full_acc.png" alt="Logo" width=500>
   </a>
 
-# COURSE TITLE
+# Docker for AI in Science
 
-Welcome to the material for COURSE NAME.
+Welcome to the material for Docker in AI for Science!
 
-Please check the [official Mkdocs Material documentation](https://squidfunk.github.io/mkdocs-material/) for more information on how to use this template.
+In this workshop, we will introduce Docker and how it can be used to accelerate your scientific research. We will cover the basics of Docker, how to create your own Docker images, and how to use Docker to run your code in a reproducible way.
+
+We will also cover how to use Singularity, a containerization tool that is commonly used in high-performance computing environments.
 
 # Sections
 
