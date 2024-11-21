@@ -8,60 +8,37 @@ Welcome to the material for Docker in AI for Science!
 
 In this workshop, we will introduce Docker and how it can be used to accelerate your scientific research. We will cover the basics of Docker, how to create your own Docker images, and how to use Docker to run your code in a reproducible way.
 
-We will also cover how to use Singularity, a containerization tool that is commonly used in high-performance computing environments.
+The workshop is divided into the following sections:
 
-# Sections
+## Understanding Docker
 
-<div class="grid cards" markdown>
+### What is it?
+- Key concepts:
+    - Images
+    - Containers
+    - Registries
 
--   :material-cogs:{ .lg .middle } [__PAGE TITLE__](index.md)
+- Containers vs VMs
 
-    ---
-    DESCRIPTION
+### Why it matters?
+- Research benefits
+    - Reproducibility
+    - Portability
+    - Scalability
 
+- Industry connection
+    - Need for data scientists
+    - Cloud deployment
+    - Skills for the future
 
--   :fontawesome-solid-book:{ .lg .middle } [__PAGE TITLE__](multi_1/subpage_1.md)
+## Hands on
 
-    ---
-    DESCRIPTION
+### Getting started
+- Working with basic images
+- Working with scientific images
+- Managing data volumes
 
--   :material-feather:{ .lg .middle } [__PAGE TITLE__](multi_1/subpage_2.md)
-
-    ---
-    DESCRIPTION
-
--   :fontawesome-solid-flask:{ .lg .middle } [__PAGE TITLE__](multi_2/subpage_1.md)
-
-    ---
-    DESCRIPTION
-
--   :fontawesome-solid-cubes:{ .lg .middle } [__PAGE TITLE__](multi_2/subpage_2.md)
-
-    ---
-    DESCRIPTION
-
-
--   :octicons-git-branch-24:{ .lg .middle } [__PAGE TITLE__](multi_2/index.md)
-
-    ---
-    DESCRIPTION
-
-</div>
-
-<div class="grid cards" markdown>
-
--   :fontawesome-solid-person-chalkboard:{ .lg .middle } [__Slides__](resources/slides.md)
-
-    ---
-    Here you can find the slides for the course material
-
-</div>
-
-<div class="grid cards" markdown>
-
--   :fontawesome-solid-paperclip:{ .lg .middle } [__Resources__](resources/references.md)
-
-    ---
-    Each section contains a summary of further resources, but here they are all collected for convenience
-
-</div>
+### Building your own images
+- Dockerfiles
+- Best practices
+- Exercise: create your own image, upload it and then share it

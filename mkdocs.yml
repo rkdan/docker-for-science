@@ -6,7 +6,11 @@ nav:
     - Welcome!: index.md
     - License: Home/LICENSE.md
     - About us: Home/about.md
-  - Single Page 1: single.md
+  - Basics:
+    - Hello World!: Basics/hello-world.md
+    - Volumes: Basics/volumes.md
+  - Hello World!: hello-world.md
+  - Reproducibility: reproducibility.md
   - Multi Page 1:
     - Subpage 1: multi_1/subpage_1.md
     - Subpage 2: multi_1/subpage_2.md

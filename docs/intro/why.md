@@ -39,14 +39,3 @@ This is where Docker comes in.
 
 Docker allows you to create lightweight, portable, self-sufficient containers that can run on any machine that has Docker installed. This means that you can package up your entire environment, including your code, and share it with anyone. They can then run your code in the exact same environment that you developed it in, without having to worry about installing packages, or setting up their environment.
 
-
-
-## Further reading
-<div class="grid cards" markdown>
-
--   :fontawesome-solid-book-open:{ .lg .middle } [__CI/CD - Pre-commit resources__](../resources/references.md#pre-commit)
-
-    ---
-    Information on GitHub Actions, Black, Flake8, Mypy, Isort, and Git Hooks
-
-</div>
