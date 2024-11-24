@@ -1,8 +1,12 @@
 <a href="https://acceleratescience.github.io/">
     <img src="./imgs/full_acc.png" alt="Logo" width=500>
-  </a>
+</a>
 
 # Docker for AI in Science
+
+<a>
+    <img src="./imgs/docker.png" alt="docker-cat">
+</a>
 
 Welcome to the material for Docker in AI for Science!
 
