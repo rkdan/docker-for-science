@@ -1,171 +1,141 @@
-# Building Custom Docker Images with Dockerfiles
+# Building your own images
 
-A Dockerfile is a text file containing instructions for building a Docker image. It allows you to define exactly what goes into your container, including the base image, software packages, files from your project, configuration settings, and commands to run.
-
-## Basic Dockerfile Structure
-
-A Dockerfile generally includes these key elements:
-
-- `FROM` - Specifies the base image to build from
-- `WORKDIR` - Sets the working directory for subsequent commands
-- `COPY` or `ADD` - Copies files from your project into the image
-- `RUN` - Executes commands during the build process
-- `ENV` - Sets environment variables
-- `EXPOSE` - Documents which ports the container will listen on
-- `CMD` or `ENTRYPOINT` - Specifies what command runs when the container starts
-
-## A Simple Example
-
-Let's look at a basic Dockerfile for a Python application:
-
-```dockerfile
-# Use a slim Python base image
-FROM python:3.12-slim-bookworm 
-
-# Copy over the contents of the current directory
-COPY . /
-
-# Set the working directory
-WORKDIR /
-
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Run the script
-CMD ["python", "myproject/script.py"]
-```
-
-## Building the Image
-
-To build an image from a Dockerfile:
+## Project overview
+In this section we will build our own images using Dockerfiles. In order to demonstrate the process, we will have some example project files. In the `cancer-prediction` directory, we have the following:
 
 ```bash
-docker build -t myproject:latest .
+├── cancer_prediction
+│   ├── cancer_model.py
+│   ├── data
+│   │   ├── breast_cancer.csv
+│   │   ├── breast_cancer_test.csv
+│   │   └── breast_cancer_train.csv
+│   ├── models
+│   │   └── cancer_model.pkl
+│   └── notebook.ipynb
+└── requirements.txt
 ```
 
-The `-t` flag tags your image with a name and version. The `.` tells Docker to look for the Dockerfile in the current directory.
+We might want our collaborators to be able to run all of the code in the `cancer-prediction` directory without having to install all of the dependencies. We can create a Dockerfile to build an image that contains all of the dependencies and code needed to run the project.
 
-## Best Practices
+You should fork this repository (include all branches, not just `main`). Then create a new Codespace on the `start` branch. You should then see the above directory plus some other stuff like a LICENSE file and a README.md file.
 
-1. **Use Specific Base Images**
-    - Prefer specific version tags over `latest`
-    - Use slim/minimal base images when possible
-    ```dockerfile
-    FROM python:3.9-slim    # Good
-    FROM python:latest      # Not recommended
-    ```
+This overview sets us up to dive deeper into each of these concepts and see how they work in practice with our machine learning project.
 
-2. **Layer Optimization**
-    - Order instructions from least to most frequently changing
-    - Combine related commands to reduce layers
-    ```dockerfile
-    # Better - Single layer
-    RUN apt-get update && \
-        apt-get install -y package1 package2 && \
-        rm -rf /var/lib/apt/lists/*
+## Our Dockerfile
+Here is the Dockerfile:
 
-    # Worse - Three layers
-    RUN apt-get update
-    RUN apt-get install -y package1 package2
-    RUN rm -rf /var/lib/apt/lists/*
-    ```
+```Dockerfile
+# Start from an official Python base image
+FROM python:3.11-slim-bookworm
 
-3. **Clean Up**
-    - Remove unnecessary files after installations
-    - Use multi-stage builds for compile-time dependencies
+# Set working directory in the container
+WORKDIR /workspace
 
-4. **COPY vs ADD**
-    - Use `COPY` for simple file copying
-    - Use `ADD` only for archive extraction or URL downloads
-
-## Multi-Stage Builds
-
-Multi-stage builds allow you to use multiple FROM statements in your Dockerfile. This is useful for creating smaller final images by leaving build tools behind:
-
-```dockerfile
-# Build stage
-FROM python:3.9 AS builder
-WORKDIR /app
+# Copy requirements first to leverage Docker cache
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
 
-# Final stage
-FROM python:3.9-slim
-WORKDIR /app
-COPY --from=builder /usr/local/lib/python3.9/site-packages/ /usr/local/lib/python3.9/site-packages/
-COPY . .
-CMD ["python", "app.py"]
-```
+# Install dependencies - combine commands to reduce layers
+RUN pip install --no-cache-dir \
+    jupyterlab \
+    -r requirements.txt
 
-## Environment Variables and Arguments
-
-Use `ARG` for build-time variables and `ENV` for runtime variables:
-
-```dockerfile
-# Build argument
-ARG VERSION=latest
-
-# Environment variable
-ENV APP_HOME=/app
-ENV DEBUG=false
-
-WORKDIR ${APP_HOME}
-```
-
-## Working with Different Types of Applications
-
-### Python Web Application
-
-```dockerfile
-FROM python:3.9-slim
-
-WORKDIR /app
-
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
+# Copy the entire project
 COPY . .
 
-EXPOSE 8000
-CMD ["gunicorn", "app:app", "-b", "0.0.0.0:8000"]
+# Create non-root user for security
+RUN useradd -m jupyter && \
+    chown -R jupyter:jupyter /workspace
+USER jupyter
+
+# Expose the port Jupyter will run on
+EXPOSE 8888
+
+# Start Jupyter Lab from the cancer_prediction directory
+WORKDIR /workspace/cancer_prediction
+CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--LabApp.token=''", "--LabApp.password=''"]
 ```
 
-### Node.js Application
+Let's walkthrough the Dockerfile.
 
-```dockerfile
-FROM node:16-slim
+**`FROM python:3.11-slim-bookworm`**
 
-WORKDIR /app
+- Starts with official Python 3.11 image
+- 'slim-bookworm' means minimal Debian Bookworm-based image, reducing container size
+- Alternative to full image which includes many unnecessary packages
 
-COPY package*.json ./
-RUN npm install
+**`WORKDIR /workspace`**
 
-COPY . .
+- Creates and sets the working directory to /workspace
+- All subsequent commands will run from this directory
+- Standard practice for development containers
 
-EXPOSE 3000
-CMD ["npm", "start"]
+**`COPY requirements.txt .`**
+
+- Copies only requirements.txt first
+- Helps with build caching - if requirements don't change, cache this layer
+- The '.' means copy to current WORKDIR
+
+**`RUN pip install --no-cache-dir \ jupyterlab \ -r requirements.txt`**
+
+- Installs Python packages
+- `--no-cache-dir` reduces image size by not caching pip downloads
+- Combines installations in one RUN to create single layer
+- Backslashes allow multiple lines for readability
+
+**`COPY . .`**
+
+- Copies all remaining project files
+- First '.' means everything in build context
+- Second '.' means copy to current WORKDIR
+- Done after requirements for better caching
+
+**`RUN useradd -m jupyter && chown -R jupyter:jupyter /workspace`**
+
+- Creates non-root user 'jupyter' for security
+- `-m` creates home directory
+- Changes ownership of /workspace to this user
+- Best practice: don't run as root
+
+**`USER jupyter`**
+
+- Switches to non-root user
+- All subsequent commands run as this user
+
+**`EXPOSE 8888`**
+
+- Documents that container uses port 8888
+- Doesn't actually open port - that's done at runtime
+- JupyterLab's default port
+
+**`WORKDIR /workspace/cancer_prediction`**
+
+- Changes working directory again
+- Ensures Jupyter starts in project directory
+
+**`CMD ["jupyter", "lab", "--ip=0.0.0.0" ...]`**
+
+- Command to run when container starts
+- `--ip=0.0.0.0` allows external connections
+- `--no-browser` since running in container
+- Empty token/password for workshop access
+
+## Building the image
+
+To build the image, run the following command in the terminal:
+
+```bash
+docker build -t cancer-prediction .
 ```
 
-## Security Considerations
+This command builds the image using the Dockerfile in the current directory and tags it with the name `cancer-prediction`.
 
-1. **Don't Run as Root**
-    ```dockerfile
-    RUN useradd -m myuser
-    USER myuser
-    ```
+## Running the container
 
-2. **Don't Store Secrets in Images**
-    - Use build arguments or runtime environment variables
-    - Consider using Docker secrets for sensitive data
+To run the container, use the following command:
 
-3. **Keep Base Images Updated**
-    - Regularly rebuild images with updated base images
-    - Use vulnerability scanning tools
+```bash
+docker run -p 8888:8888 cancer-prediction
+```
 
-## Debugging Tips
-
-1. Use `docker build --progress=plain` for detailed build output
-2. Use `docker history` to inspect image layers
-3. Include useful metadata with `LABEL` instructions
-
-Remember that your Dockerfile is part of your application code and should be version controlled. A well-crafted Dockerfile ensures your application runs consistently across different environments and makes deployment easier.
+You should see the Jupyter Lab URL open in the browser. If you run something in the notebook and save it, the changes will persist in the container.
