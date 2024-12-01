@@ -29,6 +29,12 @@ Here is the Dockerfile:
 # Start from an official Python base image
 FROM python:3.11-slim-bookworm
 
+# Install git and clean up apt cache in the same layer
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends git && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 # Set working directory in the container
 WORKDIR /workspace
 
@@ -38,6 +44,8 @@ COPY requirements.txt .
 # Install dependencies - combine commands to reduce layers
 RUN pip install --no-cache-dir \
     jupyterlab \
+    jupyterlab-git \
+    httpx==0.27.2 \
     -r requirements.txt
 
 # Copy the entire project
@@ -63,6 +71,12 @@ Let's walkthrough the Dockerfile.
 - Starts with official Python 3.11 image
 - 'slim-bookworm' means minimal Debian Bookworm-based image, reducing container size
 - Alternative to full image which includes many unnecessary packages
+
+**`RUN apt-get update && ...`**
+
+- Installs git for version control
+- Cleans up apt cache to reduce image size
+- Combines commands to reduce layers
 
 **`WORKDIR /workspace`**
 
@@ -138,4 +152,8 @@ To run the container, use the following command:
 docker run -p 8888:8888 cancer-prediction
 ```
 
-You should see the Jupyter Lab URL open in the browser. If you run something in the notebook and save it, the changes will persist in the container.
+You should see the Jupyter Lab URL open in the browser. If you run something in the notebook and save it, the changes will **not** persist in the container. To achieve this, you will need to mount your volume directory when running the container:
+
+```bash
+docker run -p 8888:8888 -v $(pwd):/workspace cancer-prediction
+```

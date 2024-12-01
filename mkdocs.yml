@@ -12,8 +12,9 @@ nav:
     - Volumes: Basics/volumes.md
     - Docker Hub: Basics/docker-hub.md
   - Building your own images:
-    - Building you own images: Building-your-own-images/index.md
+    - Building your own images: Building-your-own-images/index.md
     - Dockerfile: Building-your-own-images/dockerfiles.md
+    - Docker Repositories: Building-your-own-images/dockerhub.md
   - Devcontainers: devcontainers.md
     # - Docker Compose: Building-your-own-images/docker-compose.md
   # - Hello World!: hello-world.md

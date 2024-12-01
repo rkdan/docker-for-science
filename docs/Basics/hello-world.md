@@ -225,6 +225,12 @@ and all unused containers with:
 docker container prune
 ```
 
+Remove all images with:
+   
+```bash
+docker rmi -f $(docker images -aq)
+```
+
 Now if you run `docker ps -a` you should see an empty list.
 
 ## Naming containers
