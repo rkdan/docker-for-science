@@ -55,7 +55,7 @@ COPY . .
 EXPOSE 8888
 
 # Start Jupyter Lab from the cancer_prediction directory
-WORKDIR /workspace/cancer_prediction
+WORKDIR /workspace/cancer-prediction
 CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--LabApp.token=''", "--LabApp.password=''"]
 ```
 
