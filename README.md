@@ -34,7 +34,7 @@
   <p align="center">
     How to work with Docker to accelerate your scientific research.
     <br />
-    <a href="https://docs.science.ai.cam.ac.uk-docker-for-science"><strong>Start the Course »</strong></a>
+    <a href="https://docs.science.ai.cam.ac.uk/docker-for-science"><strong>Start the Course »</strong></a>
     <br />
     <br />
     <a href="https://github.com/acceleratescience/docker-for-science/tree/basic">Get Basic Code</a>
