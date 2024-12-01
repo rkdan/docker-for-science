@@ -110,6 +110,7 @@ markdown_extensions:
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
 extra:
+  homepage: https://docs.science.ai.cam.ac.uk/
   consent:
       title: Cookie consent
       description: >- 
@@ -123,7 +124,7 @@ extra:
         - manage
   analytics:
     provider: google
-    property: PROPERTY-ID
+    property: G-JLGLYJ24SD
     feedback:
       title: Was this page helpful?
       ratings:
