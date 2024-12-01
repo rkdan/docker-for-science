@@ -9,6 +9,7 @@ Workspace files are mounted from the local file system or copied or cloned into 
     <img src="../imgs/architecture-containers.png" alt="docker-cont">
 </a>
 
+## Basic
 Let's create a bare-bones devcontainer for our python project. Create a new folder:
 
 ```bash
@@ -31,6 +32,7 @@ Now populate it with the following:
 ```
 This will create a new devcontainer called "Research Environment" that will use the Dockerfile in the parent directory. It will also forward port 8888 to the host machine.
 
+## Better
 This is very basic. We don't have much functionality here at all. And how do we even access the actual jupyter lab server? We don't even have the python extension installed in the container! We would also find that any changes to the the stuff inside the container would not be reflected in the host machine. So let's make our experience more enjoyable.
 
 ```json
@@ -83,13 +85,13 @@ Now we have **a lot** more functionality!
 
 Let's look at exactly what is going on here:
 
-1. Top-level configuration:
+**Top-level configuration**
 ```json
 "name": "Research Environment",
 ```
 This simply names your development container for easy identification.
 
-2. Build configuration:
+**Build configuration**
 ```json
 "build": {
     "dockerfile": "../Dockerfile",
@@ -100,7 +102,7 @@ This tells VS Code how to build the container:
 - `dockerfile`: Points to a Dockerfile one directory up from the devcontainer.json
 - `context`: Sets the build context to the parent directory - what stuff to include in the build
 
-3. Features section:
+**Features section**
 ```json
 "features": {
     "ghcr.io/devcontainers/features/git:1": {}
@@ -108,7 +110,7 @@ This tells VS Code how to build the container:
 ```
 This adds additional tools to your container. Here, it's installing Git from the GitHub Container Registry.
 
-4. VS Code Customizations:
+**VS Code Customizations**
 ```json
 "customizations": {
     "vscode": {
@@ -118,43 +120,47 @@ This adds additional tools to your container. Here, it's installing Git from the
 }
 ```
 This configures VS Code-specific settings:
+
 - Extensions installed automatically:
-  - Python extension
-  - Pylance (Python language server)
-  - Black formatter
-  - Jupyter notebook support
-  - GitHub Copilot
+    - Python extension
+    - Pylance (Python language server)
+    - Black formatter
+    - Jupyter notebook support
+    - GitHub Copilot
+  
 - VS Code settings configured:
-  - Sets Python interpreter path
-  - Enables linting
-  - Uses Black for formatting
-  - Enables format-on-save
-  - Sets a line length ruler at 88 characters (Black's default)
+    - Sets Python interpreter path
+    - Enables linting
+    - Uses Black for formatting
+    - Enables format-on-save
+    - Sets a line length ruler at 88 characters (Black's default)
 
 We can add other dev tools here like mypy or itools or flake8.
 
-1. Port Forwarding:
+**Port Forwarding**
 ```json
 "forwardPorts": [8888]
 ```
 Makes port 8888 (commonly used for Jupyter notebooks) available on your local machine.
 
-1. Post-Creation Commands:
+**Post-Creation Commands**
 ```json
 "postCreateCommand": "pip install -r requirements.txt"
 ```
 Runs after the container is created - in this case, installing Python dependencies from requirements.txt.
 
-1. Environment Variables:
+**Environment Variables**
 ```json
 "remoteEnv": {
     "PYTHONPATH": "${containerWorkspaceFolder}"
 }
 ```
 Sets environment variables in the container:
+
 - Adds the workspace folder to Python's module search path, letting you import from any subdirectory
 
 This configuration creates a fully-featured Python development environment with:
+
 - Code formatting and linting
 - Jupyter notebook support
 - Git integration
