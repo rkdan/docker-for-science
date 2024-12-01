@@ -51,11 +51,6 @@ RUN pip install --no-cache-dir \
 # Copy the entire project
 COPY . .
 
-# Create non-root user for security
-RUN useradd -m jupyter && \
-    chown -R jupyter:jupyter /workspace
-USER jupyter
-
 # Expose the port Jupyter will run on
 EXPOSE 8888
 
@@ -103,13 +98,6 @@ Let's walkthrough the Dockerfile.
 - First '.' means everything in build context
 - Second '.' means copy to current WORKDIR
 - Done after requirements for better caching
-
-**`RUN useradd -m jupyter && chown -R jupyter:jupyter /workspace`**
-
-- Creates non-root user 'jupyter' for security
-- `-m` creates home directory
-- Changes ownership of /workspace to this user
-- Best practice: don't run as root
 
 **`USER jupyter`**
 
